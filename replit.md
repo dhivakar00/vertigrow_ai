@@ -2,7 +2,13 @@
 
 VertiGrow AI is a web-based vertical farming planner that leverages artificial intelligence to provide smart crop recommendations, yield predictions, and comprehensive cost analysis for urban vertical farming projects. The application integrates weather data, machine learning models, and economic calculations to help users make informed decisions about their vertical farming ventures.
 
-The system guides users through farm planning by collecting location, area size, budget, and resource availability data, then generates personalized recommendations using AI models trained on agricultural data. It provides detailed cost breakdowns, ROI projections, and layout suggestions to support both novice and experienced vertical farmers.
+The system guides users through farm planning by collecting location, area size, budget, and resource availability data, then generates personalized recommendations using AI models trained on agricultural data with over 200 fruits and vegetables. It provides detailed cost breakdowns, ROI projections, and layout suggestions to support both novice and experienced vertical farmers.
+
+## Recent Updates (August 2025)
+- **Major Database Expansion**: Expanded crop database from 10 to 200+ fruits and vegetables including leafy greens, herbs, microgreens, fruiting vegetables, fruits, root vegetables, and specialty crops
+- **Enhanced ML Training**: Updated machine learning models to handle comprehensive crop variety with 7400+ training samples for crop recommendations and 11,000+ samples for yield predictions
+- **Complete Market Data**: Added realistic market pricing for all 200+ crops with category-based pricing structure
+- **Improved Accuracy**: Enhanced recommendation system with detailed growing parameters for each crop variety
 
 # User Preferences
 
