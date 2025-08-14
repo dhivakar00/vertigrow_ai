@@ -1,0 +1,191 @@
+{% extends "base.html" %}
+
+{% block title %}Farm Planning History - VertiGrow AI{% endblock %}
+
+{% block content %}
+<div class="container my-4">
+    <!-- Page Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+                <div>
+                    <h1 class="text-info">
+                        <i class="fas fa-history me-2"></i>
+                        Farm Planning History
+                    </h1>
+                    <p class="text-muted mb-0">Review your previous vertical farm plans</p>
+                </div>
+                <div>
+                    <a href="{{ url_for('index') }}" class="btn btn-success">
+                        <i class="fas fa-plus me-1"></i>Create New Plan
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Plans List -->
+    {% if plans %}
+    <div class="row">
+        {% for plan in plans %}
+        <div class="col-lg-6 col-xl-4 mb-4">
+            <div class="card h-100 border-info">
+                <div class="card-header bg-info text-white">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h6 class="card-title mb-0">
+                            <i class="fas fa-map-marker-alt me-1"></i>
+                            {{ plan.location }}
+                        </h6>
+                        <small>{{ plan.created_at }}</small>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <!-- Basic Info -->
+                    <div class="row mb-3">
+                        <div class="col-6">
+                            <div class="text-center">
+                                <div class="text-info fs-5">{{ plan.area_size }}m²</div>
+                                <small class="text-muted">Area</small>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="text-center">
+                                <div class="text-success fs-5">${{ "{:,.0f}".format(plan.budget) }}</div>
+                                <small class="text-muted">Budget</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Top Crops -->
+                    {% if plan.top_crops %}
+                    <div class="mb-3">
+                        <h6 class="text-muted">Recommended Crops</h6>
+                        <div class="d-flex flex-wrap gap-1">
+                            {% for crop in plan.top_crops %}
+                            <span class="badge bg-success">{{ crop }}</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <!-- ROI Info -->
+                    <div class="mb-3">
+                        <div class="row">
+                            <div class="col-6">
+                                <small class="text-muted">ROI</small>
+                                <div class="text-primary">{{ plan.roi_percentage }}%</div>
+                            </div>
+                            <div class="col-6">
+                                <small class="text-muted">Status</small>
+                                <div>
+                                    {% if 'Profitable' in plan.profitability_status %}
+                                    <span class="badge bg-success">{{ plan.profitability_status }}</span>
+                                    {% elif 'Marginally' in plan.profitability_status %}
+                                    <span class="badge bg-warning text-dark">{{ plan.profitability_status }}</span>
+                                    {% else %}
+                                    <span class="badge bg-danger">{{ plan.profitability_status }}</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer bg-dark border-top-0">
+                    <div class="d-grid">
+                        <a href="{{ url_for('view_plan', plan_id=plan.id) }}" class="btn btn-outline-info">
+                            <i class="fas fa-eye me-1"></i>View Details
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Summary Statistics -->
+    {% if plans|length > 1 %}
+    <div class="row mt-5">
+        <div class="col-12">
+            <div class="card border-secondary">
+                <div class="card-header bg-secondary text-white">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-chart-pie me-2"></i>
+                        Planning Summary
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row text-center">
+                        <div class="col-md-3">
+                            <div class="fs-3 text-info">{{ plans|length }}</div>
+                            <small class="text-muted">Total Plans</small>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="fs-3 text-success">
+                                {{ "{:,.0f}".format(plans|sum(attribute='area_size')) }}m²
+                            </div>
+                            <small class="text-muted">Total Area Planned</small>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="fs-3 text-warning">
+                                ${{ "{:,.0f}".format(plans|sum(attribute='budget')) }}
+                            </div>
+                            <small class="text-muted">Total Investment</small>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="fs-3 text-primary">
+                                {{ "{:.1f}".format(plans|sum(attribute='roi_percentage')/plans|length) }}%
+                            </div>
+                            <small class="text-muted">Average ROI</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    {% else %}
+    <!-- Empty State -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card border-secondary">
+                <div class="card-body text-center py-5">
+                    <div class="text-secondary mb-4">
+                        <i class="fas fa-seedling" style="font-size: 4rem; opacity: 0.5;"></i>
+                    </div>
+                    <h4 class="text-secondary">No Farm Plans Yet</h4>
+                    <p class="text-muted mb-4">
+                        You haven't created any vertical farm plans yet. Start by creating your first plan 
+                        to get AI-powered recommendations for your urban farming project.
+                    </p>
+                    <a href="{{ url_for('index') }}" class="btn btn-success btn-lg">
+                        <i class="fas fa-plus me-2"></i>
+                        Create Your First Plan
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Add hover effects to plan cards
+    const planCards = document.querySelectorAll('.card');
+    
+    planCards.forEach(card => {
+        card.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-2px)';
+            this.style.transition = 'transform 0.2s ease-in-out';
+        });
+        
+        card.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0)';
+        });
+    });
+});
+</script>
+{% endblock %}
